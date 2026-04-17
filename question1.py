@@ -1,3 +1,11 @@
+#Group Name: DAN/EXT 29
+
+#Group Members:
+#Faisal Shahriar - S390914
+#Riad Sarkar Santo - S394943
+#Kanij Fatema - S394326
+#Sameer Thapa - S397773
+
 # HIT137 Assignment 2 - Question 1
 
 # Function to encrypt text
