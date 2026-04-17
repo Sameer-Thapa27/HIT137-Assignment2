@@ -1,3 +1,91 @@
+# HIT137 Assignment 2 - Question 1
+
+# Function to encrypt text
+def encrypt_text(text, shift1, shift2):
+    result = ""
+
+    for char in text:
+        # Lowercase letters
+        if char.islower():
+            if 'a' <= char <= 'm':
+                result += chr((ord(char) - ord('a') + (shift1 * shift2)) % 26 + ord('a'))
+            else:
+                result += chr((ord(char) - ord('a') - (shift1 + shift2)) % 26 + ord('a'))
+
+        # Uppercase letters
+        elif char.isupper():
+            if 'A' <= char <= 'M':
+                result += chr((ord(char) - ord('A') - shift1) % 26 + ord('A'))
+            else:
+                result += chr((ord(char) - ord('A') + (shift2 ** 2)) % 26 + ord('A'))
+
+        # Other characters remain unchanged
+        else:
+            result += char
+
+    return result
+
+
+# Function to decrypt text
+def decrypt_text(text, shift1, shift2):
+    result = ""
+
+    for char in text:
+        # Lowercase letters
+        if char.islower():
+            if 'a' <= char <= 'm':
+                result += chr((ord(char) - ord('a') - (shift1 * shift2)) % 26 + ord('a'))
+            else:
+                result += chr((ord(char) - ord('a') + (shift1 + shift2)) % 26 + ord('a'))
+
+        # Uppercase letters
+        elif char.isupper():
+            if 'A' <= char <= 'M':
+                result += chr((ord(char) - ord('A') + shift1) % 26 + ord('A'))
+            else:
+                result += chr((ord(char) - ord('A') - (shift2 ** 2)) % 26 + ord('A'))
+
+        # Other characters remain unchanged
+        else:
+            result += char
+
+    return result
+
+
+# Encryption function (file handling)
+def encryption():
+    with open("raw_text.txt", "r") as file:
+        text = file.read()
+
+    encrypted = encrypt_text(text, shift1, shift2)
+
+    with open("encrypted_text.txt", "w") as file:
+        file.write(encrypted)
+
+
+# Decryption function (file handling)
+def decryption():
+    with open("encrypted_text.txt", "r") as file:
+        text = file.read()
+
+    decrypted = decrypt_text(text, shift1, shift2)
+
+    with open("decrypted_text.txt", "w") as file:
+        file.write(decrypted)
+
+
+# Verification function
+def verify():
+    with open("raw_text.txt", "r") as file1:
+        original = file1.read()
+
+    with open("decrypted_text.txt", "r") as file2:
+        decrypted = file2.read()
+
+    if original == decrypted:
+        print("Verification Successful: Decryption matches original text.")
+    else:
+        print("Verification Failed: Decryption does not match.")
 def encrypt_text(text, shift1, shift2):
     result = ""
 
