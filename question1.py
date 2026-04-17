@@ -179,8 +179,8 @@ def main():
     encrypted = encrypt_text(raw_text, shift1, shift2)
     with open("encrypted_text.txt", "w") as f:
         f.write(encrypted)
-    print("Encryption successful: 'encrypted_text.txt' created.")
-    print(f"Encrypted text: {encrypted}")
+    #print("Encryption successful: 'encrypted_text.txt' created.")
+    #print(f"Encrypted text: {encrypted}")
 
     # Decrypt
     decrypted = decrypt_text(encrypted, shift1, shift2)
