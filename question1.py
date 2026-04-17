@@ -1,0 +1,105 @@
+def encrypt_text(text, shift1, shift2):
+    result = ""
+
+    for ch in text:
+        if ch.islower():
+            if 'a' <= ch <= 'm':
+                shift = shift1 * shift2
+                encrypted = chr((ord(ch) - ord('a') + shift) % 26 + ord('a'))
+                result += "L1" + encrypted  # L1 = lowercase range 1 (a-m)
+            else:  # n-z
+                shift = shift1 + shift2
+                encrypted = chr((ord(ch) - ord('a') - shift) % 26 + ord('a'))
+                result += "L2" + encrypted  # L2 = lowercase range 2 (n-z)
+
+        elif ch.isupper():
+            if 'A' <= ch <= 'M':
+                shift = shift1
+                encrypted = chr((ord(ch) - ord('A') - shift) % 26 + ord('A'))
+                result += "U1" + encrypted  # U1 = uppercase range 1 (A-M)
+            else:  # N-Z
+                shift = shift2 ** 2
+                encrypted = chr((ord(ch) - ord('A') + shift) % 26 + ord('A'))
+                result += "U2" + encrypted  # U2 = uppercase range 2 (N-Z)
+
+        else:
+            result += "NN" + ch  # NN = non-alphabetic
+
+    return result
+
+
+def decrypt_text(text, shift1, shift2):
+    result = ""
+    i = 0
+
+    while i < len(text):
+        # Read the 2-character prefix
+        if i + 2 < len(text):
+            prefix = text[i:i+2]
+            ch = text[i+2] if i+2 < len(text) else ''
+
+            if prefix == "L1":  # Lowercase a-m
+                shift = shift1 * shift2
+                result += chr((ord(ch) - ord('a') - shift) % 26 + ord('a'))
+                i += 3
+
+            elif prefix == "L2":  # Lowercase n-z
+                shift = shift1 + shift2
+                result += chr((ord(ch) - ord('a') + shift) % 26 + ord('a'))
+                i += 3
+
+            elif prefix == "U1":  # Uppercase A-M
+                shift = shift1
+                result += chr((ord(ch) - ord('A') + shift) % 26 + ord('A'))
+                i += 3
+
+            elif prefix == "U2":  # Uppercase N-Z
+                shift = shift2 ** 2
+                result += chr((ord(ch) - ord('A') - shift) % 26 + ord('A'))
+                i += 3
+
+            elif prefix == "NN":  # Non-alphabetic
+                result += ch
+                i += 3
+
+            else:
+                # If no prefix found, treat as regular character (shouldn't happen)
+                result += ch
+                i += 1
+        else:
+            break
+
+    return result
+
+
+def main():
+    shift1 = int(input("Enter shift1: "))
+    shift2 = int(input("Enter shift2: "))
+
+    with open("raw_text.txt", "r", encoding="utf-8") as f:
+        raw_text = f.read()
+
+    # Encrypt
+    encrypted = encrypt_text(raw_text, shift1, shift2)
+    with open("encrypted_text.txt", "w") as f:
+        f.write(encrypted)
+    print("Encryption successful: 'encrypted_text.txt' created.")
+    print(f"Encrypted text: {encrypted}")
+
+    # Decrypt
+    decrypted = decrypt_text(encrypted, shift1, shift2)
+    with open("decrypted_text.txt", "w") as f:
+        f.write(decrypted)
+    print("Decryption successful: 'decrypted_text.txt' created.")
+
+    # Verify
+    if raw_text == decrypted:
+        print("Verification: SUCCESS.")
+    else:
+        print("Verification: FAILED.")
+        print("Original:  ", raw_text)
+        print("Decrypted:", decrypted)
+
+
+if __name__ == "__main__":
+    main()
